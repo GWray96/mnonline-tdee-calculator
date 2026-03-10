@@ -52,13 +52,48 @@ export default function CalculatorPage() {
     setStep(n);
   }
 
+  // Step 1 → validate stats before moving to details
   function goToStep2() {
+    const ageVal = parseFloat(age);
+
+    let weightKgVal: number;
+    if (selectedUnit === "metric") {
+      weightKgVal = parseFloat(weightKg);
+    } else {
+      const st = parseFloat(weightSt) || 0;
+      const lbs = parseFloat(weightLbs) || 0;
+      weightKgVal = st * 6.35029 + lbs * 0.453592;
+      if (!st && !lbs) weightKgVal = NaN;
+    }
+
+    let heightCmVal: number;
+    if (selectedUnit === "metric") {
+      heightCmVal = parseFloat(heightCm);
+    } else {
+      const ft = parseFloat(heightFt) || 0;
+      const inVal = parseFloat(heightIn) || 0;
+      heightCmVal = (ft * 12 + inVal) * 2.54;
+      if (!ft) heightCmVal = NaN;
+    }
+
+    if (!ageVal || isNaN(weightKgVal) || isNaN(heightCmVal) || !weightKgVal || !heightCmVal) {
+      setCalcError(true);
+      return;
+    }
+
+    setCalcError(false);
+    showStep(2);
+  }
+
+  // Step 2 → validate details then calculate
+  function submitDetailsAndCalculate() {
     const nameVal = firstName.trim();
     const emailVal = email.trim();
     const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal);
     setNameError(!nameVal);
     setEmailError(!emailVal || !emailValid);
-    if (nameVal && emailVal && emailValid) showStep(2);
+    if (!nameVal || !emailVal || !emailValid) return;
+    calculate();
   }
 
   function calculate() {
@@ -245,8 +280,8 @@ export default function CalculatorPage() {
         />
       </div>
 
-      {/* Step 1 */}
-      {step === 1 && (
+      {/* Step 2 — Your Details */}
+      {step === 2 && (
         <div
           className="animate-fadeUp rounded border border-(--border) bg-(--surface) p-8"
           style={{ boxShadow: "none" }}
@@ -254,7 +289,7 @@ export default function CalculatorPage() {
           <div className="relative overflow-hidden">
             <div className="absolute left-0 right-0 top-0 h-0.5 bg-(--orange)" />
             <div className="font-(family-name:--font-barlow-condensed) mb-6 text-lg font-bold tracking-widest uppercase">
-              Step 1 — Your Details
+              Step 2 — Your Details
             </div>
 
             <div className="mb-[18px]">
@@ -295,10 +330,10 @@ export default function CalculatorPage() {
 
             <button
               type="button"
-              onClick={goToStep2}
+              onClick={submitDetailsAndCalculate}
               className="mt-2 w-full rounded bg-(--orange) py-4 font-(family-name:--font-bebas) text-xl tracking-[0.12em] text-white transition-colors hover:bg-[#e04a08] active:scale-[0.99]"
             >
-              Continue →
+              Get My Results →
             </button>
 
             <div className="mt-3.5 flex items-center justify-center gap-1 text-center text-[0.72rem] leading-relaxed text-(--muted)">
@@ -325,8 +360,8 @@ export default function CalculatorPage() {
         </div>
       )}
 
-      {/* Step 2 */}
-      {step === 2 && (
+      {/* Step 1 — Your Stats */}
+      {step === 1 && (
         <div
           className="animate-fadeUp rounded border border-(--border) bg-(--surface) p-8"
           style={{ boxShadow: "none" }}
@@ -334,7 +369,7 @@ export default function CalculatorPage() {
           <div className="relative overflow-hidden">
             <div className="absolute left-0 right-0 top-0 h-0.5 bg-(--orange)" />
             <div className="font-(family-name:--font-barlow-condensed) mb-6 text-lg font-bold tracking-widest uppercase">
-              Step 2 — Your Stats
+              Step 1 — Your Stats
             </div>
 
             <div className="mb-[22px] flex overflow-hidden rounded border border-(--border) bg-(--surface2)">
@@ -598,10 +633,10 @@ export default function CalculatorPage() {
             )}
             <button
               type="button"
-              onClick={calculate}
+              onClick={goToStep2}
               className="mt-2 w-full rounded bg-(--orange) py-4 font-(family-name:--font-bebas) text-xl tracking-[0.12em] text-white transition-colors hover:bg-[#e04a08] active:scale-[0.99]"
             >
-              Get My Results →
+              Next →
             </button>
           </div>
         </div>
@@ -630,25 +665,6 @@ export default function CalculatorPage() {
               Here&apos;s Your Plan, <span className="text-(--orange)">{results.firstName}</span>
             </div>
             <p className="mt-1.5 text-sm text-(--muted)">Based on your stats and goal</p>
-          </div>
-
-          <div className="mb-5 flex items-center gap-2.5 rounded border border-[var(--success)/0.25] bg-[var(--success)/0.08] px-4 py-3 text-[0.82rem] text-(--success)">
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="var(--success)"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-              <polyline points="22,6 12,13 2,6" />
-            </svg>
-            <span>
-              Results sent to <strong>{results.email}</strong> — check your inbox
-            </span>
           </div>
 
           <div className="mb-3.5 rounded border border-(--border) bg-(--surface) p-8">
