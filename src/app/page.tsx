@@ -809,7 +809,7 @@ export default function CalculatorPage() {
             />
             <p className="mb-4 text-sm leading-relaxed text-(--muted)">{results.ctaBody}</p>
             <a
-              href="https://mnonlinecoach.com"
+              href="https://tidycal.com/maciej-nowicki/discovery-call"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block rounded bg-(--orange) px-8 py-3.5 font-(family-name:--font-bebas) text-lg tracking-[0.12em] text-white transition-colors hover:bg-[#e04a08]"
