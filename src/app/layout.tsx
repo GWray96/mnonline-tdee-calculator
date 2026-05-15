@@ -21,12 +21,13 @@ const barlowCondensed = Barlow_Condensed({
   subsets: ["latin"],
 });
 
+const GA_ID = "G-49JF1NJNJ3";
+const GSC_VERIFICATION = "4_7ShZ6c0jZItRaPgPzD189vXGF-qtr7mhCIATHU5L0";
+
 export const metadata: Metadata = {
   title: "MNONLINE | Free Calorie Calculator",
   description: "Find out exactly how many calories you need. Get your personalised daily calorie target and macros in 60 seconds.",
-  verification: process.env.GSC_VERIFICATION
-    ? { google: process.env.GSC_VERIFICATION }
-    : undefined,
+  verification: { google: GSC_VERIFICATION },
 };
 
 export default function RootLayout({
@@ -41,9 +42,7 @@ export default function RootLayout({
       >
         {children}
       </body>
-      {process.env.NEXT_PUBLIC_GA_ID && (
-        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
-      )}
+      <GoogleAnalytics gaId={GA_ID} />
     </html>
   );
 }
