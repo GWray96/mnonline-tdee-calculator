@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Bebas_Neue, Barlow, Barlow_Condensed } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 
 const bebasNeue = Bebas_Neue({
@@ -23,6 +24,9 @@ const barlowCondensed = Barlow_Condensed({
 export const metadata: Metadata = {
   title: "MNONLINE | Free Calorie Calculator",
   description: "Find out exactly how many calories you need. Get your personalised daily calorie target and macros in 60 seconds.",
+  verification: process.env.GSC_VERIFICATION
+    ? { google: process.env.GSC_VERIFICATION }
+    : undefined,
 };
 
 export default function RootLayout({
@@ -37,6 +41,9 @@ export default function RootLayout({
       >
         {children}
       </body>
+      {process.env.NEXT_PUBLIC_GA_ID && (
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+      )}
     </html>
   );
 }
